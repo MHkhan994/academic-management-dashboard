@@ -10,7 +10,7 @@ type TProps = {
 
 const PageHeader = ({ title, subtitle, buttons }: TProps) => {
   return (
-    <div className="flex items-center p-4 border-b flex-wrap gap-x-3 gap-y-1.5 justify-between pb-4">
+    <div className="flex items-center px-4 py-3 border-b flex-wrap gap-x-3 gap-y-1.5 justify-between pb-4">
       <div className="flex items-center">
         <SidebarTrigger size={"sm"} />
         <div className="border-l-2 pl-4 ml-3">

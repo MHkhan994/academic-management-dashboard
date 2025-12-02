@@ -1,0 +1,290 @@
+{
+  "students": [
+    {
+      "id": "S001",
+      "name": "Alice Johnson",
+      "email": "alice@university.edu",
+      "enrollmentYear": 2022,
+      "enrollmentDate": "2022-08-15",
+      "year": "Junior",
+      "gpa": 3.95,
+      "enrolledCourses": ["CS101", "CS201", "MATH101"]
+    },
+    {
+      "id": "S002",
+      "name": "Bob Smith",
+      "email": "bob@university.edu",
+      "enrollmentYear": 2021,
+      "enrollmentDate": "2021-09-01",
+      "year": "Senior",
+      "gpa": 3.87,
+      "enrolledCourses": ["CS101", "PHYS101"]
+    },
+    {
+      "id": "S003",
+      "name": "Carol Davis",
+      "email": "carol@university.edu",
+      "enrollmentYear": 2023,
+      "enrollmentDate": "2023-08-20",
+      "year": "Sophomore",
+      "gpa": 3.92,
+      "enrolledCourses": ["CS101", "CS201", "ENG101"]
+    },
+    {
+      "id": "S004",
+      "name": "David Wilson",
+      "email": "david@university.edu",
+      "enrollmentYear": 2022,
+      "enrollmentDate": "2022-09-05",
+      "year": "Junior",
+      "gpa": 3.78,
+      "enrolledCourses": ["MATH101", "PHYS101"]
+    },
+    {
+      "id": "S005",
+      "name": "Eve Martinez",
+      "email": "eve@university.edu",
+      "enrollmentYear": 2021,
+      "enrollmentDate": "2021-08-10",
+      "year": "Senior",
+      "gpa": 3.99,
+      "enrolledCourses": ["CS201", "CS301", "MATH201"]
+    },
+    {
+      "id": "S006",
+      "name": "Frank Brown",
+      "email": "frank@university.edu",
+      "enrollmentYear": 2023,
+      "enrollmentDate": "2023-09-12",
+      "year": "Sophomore",
+      "gpa": 3.65,
+      "enrolledCourses": ["CS101", "ENG101", "HIST101"]
+    },
+    {
+      "id": "S007",
+      "name": "Grace Lee",
+      "email": "grace@university.edu",
+      "enrollmentYear": 2022,
+      "enrollmentDate": "2022-08-25",
+      "year": "Junior",
+      "gpa": 3.88,
+      "enrolledCourses": ["PHYS101", "PHYS201", "MATH101"]
+    },
+    {
+      "id": "S008",
+      "name": "Henry Chen",
+      "email": "henry@university.edu",
+      "enrollmentYear": 2021,
+      "enrollmentDate": "2021-08-18",
+      "year": "Senior",
+      "gpa": 3.91,
+      "enrolledCourses": ["CS201", "MATH201", "ENG201"]
+    }
+  ],
+  "courses": [
+    {
+      "id": "CS101",
+      "name": "Introduction to Computer Science",
+      "code": "CS101",
+      "faculty": "F001",
+      "enrollment": 245,
+      "credits": 3
+    },
+    {
+      "id": "CS201",
+      "name": "Data Structures",
+      "code": "CS201",
+      "faculty": "F001",
+      "enrollment": 156,
+      "credits": 3
+    },
+    {
+      "id": "CS301",
+      "name": "Algorithms",
+      "code": "CS301",
+      "faculty": "F002",
+      "enrollment": 89,
+      "credits": 4
+    },
+    {
+      "id": "MATH101",
+      "name": "Calculus I",
+      "code": "MATH101",
+      "faculty": "F003",
+      "enrollment": 312,
+      "credits": 4
+    },
+    {
+      "id": "MATH201",
+      "name": "Linear Algebra",
+      "code": "MATH201",
+      "faculty": "F003",
+      "enrollment": 198,
+      "credits": 3
+    },
+    {
+      "id": "PHYS101",
+      "name": "Physics I",
+      "code": "PHYS101",
+      "faculty": "F004",
+      "enrollment": 287,
+      "credits": 4
+    },
+    {
+      "id": "PHYS201",
+      "name": "Physics II",
+      "code": "PHYS201",
+      "faculty": "F004",
+      "enrollment": 124,
+      "credits": 4
+    },
+    {
+      "id": "ENG101",
+      "name": "English Composition",
+      "code": "ENG101",
+      "faculty": "F005",
+      "enrollment": 198,
+      "credits": 3
+    },
+    {
+      "id": "ENG201",
+      "name": "Literature",
+      "code": "ENG201",
+      "faculty": "F005",
+      "enrollment": 87,
+      "credits": 3
+    },
+    {
+      "id": "HIST101",
+      "name": "World History",
+      "code": "HIST101",
+      "faculty": "F006",
+      "enrollment": 156,
+      "credits": 3
+    }
+  ],
+  "faculty": [
+    {
+      "id": "F001",
+      "name": "Dr. James Anderson",
+      "email": "james@university.edu",
+      "courses": ["CS101", "CS201"],
+      "department": "Computer Science"
+    },
+    {
+      "id": "F002",
+      "name": "Dr. Sarah Mitchell",
+      "email": "sarah@university.edu",
+      "courses": ["CS301"],
+      "department": "Computer Science"
+    },
+    {
+      "id": "F003",
+      "name": "Dr. Michael Thompson",
+      "email": "michael@university.edu",
+      "courses": ["MATH101", "MATH201"],
+      "department": "Mathematics"
+    },
+    {
+      "id": "F004",
+      "name": "Dr. Jennifer White",
+      "email": "jennifer@university.edu",
+      "courses": ["PHYS101", "PHYS201"],
+      "department": "Physics"
+    },
+    {
+      "id": "F005",
+      "name": "Dr. Robert Taylor",
+      "email": "robert@university.edu",
+      "courses": ["ENG101", "ENG201"],
+      "department": "English"
+    },
+    {
+      "id": "F006",
+      "name": "Dr. Emily Johnson",
+      "email": "emily@university.edu",
+      "courses": ["HIST101"],
+      "department": "History"
+    }
+  ],
+  "grades": [
+    {
+      "studentId": "S001",
+      "courseId": "CS101",
+      "grade": "A+",
+      "score": 98
+    },
+    {
+      "studentId": "S001",
+      "courseId": "CS201",
+      "grade": "A",
+      "score": 94
+    },
+    {
+      "studentId": "S001",
+      "courseId": "MATH101",
+      "grade": "A",
+      "score": 96
+    },
+    {
+      "studentId": "S002",
+      "courseId": "CS101",
+      "grade": "A-",
+      "score": 91
+    },
+    {
+      "studentId": "S002",
+      "courseId": "PHYS101",
+      "grade": "B+",
+      "score": 88
+    },
+    {
+      "studentId": "S003",
+      "courseId": "CS101",
+      "grade": "A",
+      "score": 95
+    },
+    {
+      "studentId": "S003",
+      "courseId": "CS201",
+      "grade": "A",
+      "score": 93
+    },
+    {
+      "studentId": "S003",
+      "courseId": "ENG101",
+      "grade": "A+",
+      "score": 99
+    },
+    {
+      "studentId": "S004",
+      "courseId": "MATH101",
+      "grade": "B+",
+      "score": 87
+    },
+    {
+      "studentId": "S004",
+      "courseId": "PHYS101",
+      "grade": "B",
+      "score": 85
+    },
+    {
+      "studentId": "S005",
+      "courseId": "CS201",
+      "grade": "A+",
+      "score": 99
+    },
+    {
+      "studentId": "S005",
+      "courseId": "CS301",
+      "grade": "A+",
+      "score": 97
+    },
+    {
+      "studentId": "S005",
+      "courseId": "MATH201",
+      "grade": "A+",
+      "score": 98
+    }
+  ]
+}
