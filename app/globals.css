@@ -61,6 +61,10 @@
   --shadow-2xl: 0px 1px 3px 0px hsl(0 0% 0% / 0.25);
   --tracking-normal: 0em;
   --spacing: 0.25rem;
+
+  /* custom colors */
+  --dark-gray: hsla(15, 2%, 35%);
+  --gray: hsla(15, 1%, 47%);
 }
 
 .dark {
@@ -119,6 +123,9 @@
   --shadow-xl: 0px 1px 3px 0px hsl(0 0% 0% / 0.1),
     0px 8px 10px -1px hsl(0 0% 0% / 0.1);
   --shadow-2xl: 0px 1px 3px 0px hsl(0 0% 0% / 0.25);
+
+  --dark-gray: hsla(0, 0%, 82%, 1);
+  --gray: hsla(0, 0%, 76%, 1);
 }
 
 @theme inline {
@@ -172,6 +179,9 @@
   --shadow-lg: var(--shadow-lg);
   --shadow-xl: var(--shadow-xl);
   --shadow-2xl: var(--shadow-2xl);
+
+  --color-dark-gray: var(--dark-gray);
+  --color-gray: var(--gray);
 }
 
 @layer base {
@@ -181,5 +191,13 @@
   body {
     /* @apply bg-background text-foreground; */
     letter-spacing: var(--tracking-normal);
+  }
+
+  .page-title {
+    @apply text-lg font-semibold text-foreground lg:text-xl;
+  }
+
+  .page-subtitle {
+    @apply text-gray text-sm lg:text-sm;
   }
 }
