@@ -39,3 +39,9 @@ export interface UniversityData {
   faculty: Faculty[];
   grades: Grade[];
 }
+
+export interface Enrollment {
+  studentId: string;
+  courseId: string;
+  enrolledDate: string;
+}

@@ -1,5 +1,6 @@
 import { Course, Student } from "@/interface";
 import { ApiErrorHandler } from "@/lib/api-utils";
+import { instance } from "@/lib/axios";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -9,13 +10,13 @@ export async function GET(req: NextRequest) {
     const year = searchParams.get("year");
     const course = searchParams.get("course");
 
-    const res = await fetch(`${process.env.API_URL}/students`);
+    const res = await instance.get(`/students`);
 
-    if (!res.ok) {
+    if (!res) {
       return ApiErrorHandler.internalError("Failed to fetch students");
     }
 
-    const students: Student[] = await res.json();
+    const students: Student[] = res.data;
 
     let filtered = students;
 
@@ -40,9 +41,9 @@ export async function GET(req: NextRequest) {
     let courses: Course[] = [];
 
     try {
-      const courseRes = await fetch(`${process.env.API_URL}/courses`);
+      const courseRes = await instance.get(`/courses`);
       if (courseRes) {
-        courses = await courseRes.json();
+        courses = await courseRes.data;
       }
     } catch (err) {
       console.log(err);
@@ -50,9 +51,9 @@ export async function GET(req: NextRequest) {
 
     const populated = sorted?.map((student) => ({
       ...student,
-      enrolledCourses: student.enrolledCourses?.map((course) =>
-        courses?.find((c) => c.code === course)
-      ),
+      enrolledCourses: student.enrolledCourses
+        ?.map((course) => courses?.find((c) => c.code === course))
+        .filter(Boolean),
     }));
 
     return NextResponse.json(populated);
