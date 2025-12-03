@@ -1,6 +1,10 @@
 import { Button } from "@/components/ui/button";
 
-export default function Home() {
+export default async function Home() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/students`);
+
+  console.log(await res.json());
+
   return (
     <div className="h-screen">
       <Button>Hello</Button>
