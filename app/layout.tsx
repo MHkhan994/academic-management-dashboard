@@ -36,13 +36,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${beVietnamPro.variable} antialiased bg-sidebar w-full p-2 ps-0 pb-0`}
+        className={`${beVietnamPro.variable} antialiased bg-sidebar p-2 ps-0 pb-0`}
       >
         <ThemeProvider attribute="class" defaultTheme="dark">
           <SidebarProvider>
             <AppSidebar />
-            <main className="bg-background border border-black/10 shadow-sm w-full rounded-xl min-h-screen">
-              {/* <Navbar /> */}
+            <main className="bg-background border border-black/10 overflow-hidden shadow-sm w-full rounded-xl">
               {children}
             </main>
           </SidebarProvider>
