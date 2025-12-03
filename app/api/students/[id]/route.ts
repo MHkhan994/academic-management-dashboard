@@ -10,6 +10,8 @@ export async function GET(
   try {
     const { id } = await params;
 
+    console.log("update");
+
     if (!id || typeof id !== "string") {
       return ApiErrorHandler.badRequest("Invalid student ID");
     }
