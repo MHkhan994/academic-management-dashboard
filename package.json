@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:prod": "env-cmd -f .env.prod next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
@@ -45,6 +46,7 @@
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.19",
     "embla-carousel-react": "^8.6.0",
+    "env-cmd": "^11.0.0",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.555.0",
     "next": "16.0.6",
