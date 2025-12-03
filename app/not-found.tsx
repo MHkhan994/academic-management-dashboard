@@ -7,7 +7,7 @@ import PageHeader from "@/components/global/PageHeader";
 export default function NotFound() {
   return (
     <div>
-      <PageHeader title="Page not found!" />
+      <PageHeader title="Page not found!" className="px-4 pt-3" />
       <div className="flex items-center flex-col lg:flex-row gap-10 p-4 justify-center h-[70vh]">
         <Image
           src={"/not-found.png"}

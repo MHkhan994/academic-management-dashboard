@@ -1,16 +1,23 @@
 import { ReactNode } from "react";
 import { SidebarTrigger } from "../ui/sidebar";
 import ThemeSwitcher from "../shared/ThemeSwitcher";
+import { cn } from "@/lib/utils";
 
 type TProps = {
   title: string | ReactNode;
   subtitle?: string;
   buttons?: ReactNode;
+  className?: string;
 };
 
-const PageHeader = ({ title, subtitle, buttons }: TProps) => {
+const PageHeader = ({ title, subtitle, buttons, className }: TProps) => {
   return (
-    <div className="flex items-center px-4 py-3 border-b flex-wrap gap-x-3 gap-y-1.5 justify-between pb-4">
+    <div
+      className={cn(
+        "flex items-center border-b flex-wrap gap-x-3 gap-y-1.5 justify-between pb-4",
+        className
+      )}
+    >
       <div className="flex items-center">
         <SidebarTrigger size={"sm"} />
         <div className="border-l-2 pl-4 ml-3">
