@@ -63,9 +63,9 @@ export function DataTable<TData, TValue>({
               Array.from({ length: limit }).map((_, i) => (
                 <TableRow key={i}>
                   {Array.from({
-                    length: table.getRowModel().rows?.length - 1,
-                  }).map((_, i) => (
-                    <TableCell key={i}>
+                    length: columns.length,
+                  }).map((_, index) => (
+                    <TableCell key={index}>
                       <Skeleton className="w-full h-7 my-1" />
                     </TableCell>
                   ))}

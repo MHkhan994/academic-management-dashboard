@@ -58,8 +58,8 @@ const GlobalPagination: React.FC<PaginationProps> = ({
             onClick={() => (currentPage === i ? null : handlePageChange(i))}
             className={`rounded-md px-3 py-1 text-sm font-medium ${
               currentPage === i
-                ? "bg-primary text-pure-white cursor-not-allowed"
-                : "hover:bg-primary bg-background text-black hover:text-white"
+                ? "bg-primary text-white cursor-not-allowed"
+                : "hover:bg-primary bg-background text-dark-gray hover:text-white"
             }`}
           >
             {i}
