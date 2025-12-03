@@ -15,6 +15,7 @@ import {
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import ThemeSwitcher from "./ThemeSwitcher";
 
 // Menu items.
 const items = [
@@ -50,7 +51,7 @@ function AppSidebar() {
 
   return (
     <Sidebar className="border-none" collapsible="icon">
-      <SidebarContent>
+      <SidebarContent className="flex justify-between">
         <SidebarGroup>
           <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
@@ -61,7 +62,8 @@ function AppSidebar() {
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
                       className={cn(
-                        isActive ? "bg-primary text-primary-foreground" : ""
+                        isActive ? "bg-primary text-primary-foreground" : "",
+                        "h-10 text-base font-medium"
                       )}
                       asChild
                     >
@@ -75,6 +77,15 @@ function AppSidebar() {
               })}
             </SidebarMenu>
           </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarMenu>
+            <SidebarMenuItem className="mt-auto">
+              <SidebarMenuButton asChild className="flex w-full justify-center">
+                <ThemeSwitcher />
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
       <SidebarRail className="hover:after:bg-transparent" />

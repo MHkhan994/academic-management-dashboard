@@ -25,9 +25,7 @@ const PageHeader = ({ title, subtitle, buttons, className }: TProps) => {
           <p className="page-subtitle">{subtitle}</p>
         </div>
       </div>
-      <div className="flex gap-2">
-        {buttons} <ThemeSwitcher />
-      </div>
+      <div className="flex gap-2">{buttons}</div>
     </div>
   );
 };
