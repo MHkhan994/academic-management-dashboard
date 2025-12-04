@@ -35,8 +35,8 @@ const items = [
     icon: GraduationCap,
   },
   {
-    title: "Faculty",
-    url: "/faculty",
+    title: "Faculty Members",
+    url: "/faculty-members",
     icon: School,
   },
   {

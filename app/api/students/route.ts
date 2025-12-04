@@ -100,8 +100,6 @@ export async function GET(req: NextRequest) {
         limit,
         total,
         totalPages: Math.ceil(total / limit),
-        hasNext: page < Math.ceil(total / limit),
-        hasPrev: page > 1,
       },
     });
   } catch (error) {
