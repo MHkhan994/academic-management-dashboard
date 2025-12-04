@@ -85,7 +85,6 @@ export default function StudentsPage() {
 
       const res = await axios.get(`/api/students?${params.toString()}`);
       const data = res.data;
-      console.log(data.data);
       setStudents(data?.data || []);
       setTotal(data?.pagination?.total || 0);
     } catch (error) {
