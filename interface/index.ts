@@ -67,3 +67,9 @@ export interface StudentProfile {
     credits: number;
   }>;
 }
+
+export type GradeResult = {
+  letter: string;
+  gpa: number;
+  isPassing: boolean;
+};

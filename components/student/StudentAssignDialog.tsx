@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Dialog,
   DialogContent,
@@ -6,18 +7,34 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "../ui/dialog";
-import { Label } from "../ui/label";
-import { Button } from "../ui/button";
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { MultiSelect } from "@/components/ui/multiselect";
+import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { toast } from "sonner";
 import { Course, StudentProfile } from "@/interface";
-import { MultiSelect } from "../ui/multiselect";
-import { Activity, useState } from "react";
-import { Skeleton } from "../ui/skeleton";
-import { Card, CardContent } from "../ui/card";
 import { delay } from "@/lib/utils";
+import { Label } from "../ui/label";
+
+const assignSchema = z.object({
+  courseIds: z.array(z.string()).min(1, "Please select at least one course"),
+});
+
+type AssignFormData = z.infer<typeof assignSchema>;
 
 const StudentAssignDialog = ({
   open,
@@ -29,18 +46,30 @@ const StudentAssignDialog = ({
   selectedStudent: string;
 }) => {
   const queryClient = useQueryClient();
-  const [courseToAssign, setcourseToAssign] = useState<string[]>([]);
+
+  const form = useForm<AssignFormData>({
+    resolver: zodResolver(assignSchema),
+    defaultValues: {
+      courseIds: [],
+    },
+  });
+
+  // Fetch all courses
   const { data: coursesData } = useQuery({
     queryKey: ["courses"],
     queryFn: async () => {
-      const res = await axios.get("/api/courses?page=1&limit=30");
-      return res.data?.data || [];
+      const res = await axios.get("/api/courses?page=1&limit=100");
+      return (res.data?.data || []) as Course[];
     },
   });
-  const courses: Course[] = coursesData || [];
 
-  const { data: studentData, isLoading } = useQuery({
-    queryKey: [`student+${selectedStudent}`],
+  // Fetch selected student
+  const {
+    data: studentData,
+    isLoading: studentLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["student", selectedStudent],
     queryFn: async () => {
       const res = await axios.get(`/api/students/${selectedStudent}`);
       return res.data as StudentProfile;
@@ -49,106 +78,157 @@ const StudentAssignDialog = ({
     staleTime: 0,
   });
 
+  const alreadyEnrolledCourseIds = studentData?.courses?.map((c) => c.id) || [];
+
+  const availableCourses = coursesData?.filter(
+    (course) => !alreadyEnrolledCourseIds.includes(course.id)
+  );
+
   const assignCourseMutation = useMutation({
-    mutationFn: async (data: { studentId: string; courses: string[] }) => {
+    mutationFn: async (data: { studentId: string; courseIds: string[] }) => {
       await delay(500);
-      return await axios.patch(`/api/students/${data.studentId}`, {
-        enrolledCourses: data.courses,
+      return axios.patch(`/api/students/${data.studentId}`, {
+        enrolledCourses: data.courseIds,
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["students"],
-      });
-      setcourseToAssign([]);
-      toast.success("Course assigned successfully");
+      queryClient.invalidateQueries({ queryKey: ["students"] });
+      queryClient.invalidateQueries({ queryKey: ["student", selectedStudent] });
+      toast.success("Courses assigned successfully");
+      form.reset();
       setOpen(false);
     },
-    onError: (error) => {
-      console.error("Failed to assign course:", error?.message);
-      toast.error("Failed to assign course. Please try again.");
+    onError: (error: any) => {
+      console.error("Failed to assign courses:", error);
+      toast.error(
+        error?.response?.data?.message ||
+          "Failed to assign courses. Please try again."
+      );
     },
   });
 
-  const handleAssignCourse = () => {
-    if (!selectedStudent || !courseToAssign) {
-      toast.warning("Missing Information, Please select a course");
-      return;
-    }
-
+  const onSubmit = (data: AssignFormData) => {
     assignCourseMutation.mutate({
       studentId: selectedStudent,
-      courses: courseToAssign,
+      courseIds: data.courseIds,
     });
   };
 
+  const handleClose = () => {
+    setOpen(false);
+    form.reset();
+  };
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent>
+    <Dialog open={open} onOpenChange={handleClose}>
+      <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Assign Course</DialogTitle>
+          <DialogTitle>Assign Courses</DialogTitle>
           <DialogDescription>
-            Assign a new course to {studentData?.name}
+            Assign new courses to <strong>{studentData?.name || "..."}</strong>
           </DialogDescription>
         </DialogHeader>
 
-        <Activity mode={isLoading ? "visible" : "hidden"}>
-          <div className="space-y-2">
-            <Skeleton className="w-full h-20" />
-            <Skeleton className="h-4 w-28" />
-            <Skeleton className="w-full h-9" />
+        {studentLoading ? (
+          <div className="space-y-4 py-6">
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-32 w-full" />
           </div>
-        </Activity>
-
-        <Activity mode={isLoading ? "hidden" : "visible"}>
-          <div className="space-y-3 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="assignCourse">Select Courses</Label>
-              <MultiSelect
-                selected={courseToAssign}
-                onChange={setcourseToAssign}
-                placeholder="Choose courses"
-                options={courses?.map((course) => ({
-                  value: course.id,
-                  searchValue: course.name,
-                  label: course.name,
-                }))}
+        ) : isError ? (
+          <p className="text-destructive py-8 text-center">
+            Failed to load student data
+          </p>
+        ) : (
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              {/* New Courses to Assign */}
+              <FormField
+                control={form.control}
+                name="courseIds"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel tooltip="Only courses the student is not already enrolled in are shown">
+                      Select Courses to Assign
+                    </FormLabel>
+                    <FormControl>
+                      <MultiSelect
+                        selected={field.value || []}
+                        onChange={field.onChange}
+                        placeholder={
+                          availableCourses?.length === 0
+                            ? "No new courses available"
+                            : "Search and select courses..."
+                        }
+                        options={
+                          availableCourses?.map((course) => ({
+                            value: course.id,
+                            label: `${course.code} - ${course.name} (${course.credits} credits)`,
+                            searchValue: `${course.code} ${course.name}`,
+                          })) || []
+                        }
+                        readOnly={
+                          assignCourseMutation.isPending ||
+                          availableCourses?.length === 0
+                        }
+                      />
+                    </FormControl>
+                    <div className="text-sm text-muted-foreground">
+                      {field.value?.length} course(s) selected
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            <div className="space-y-2">
-              <Label>Assigned Courses</Label>
-              <div className="space-y-1.5">
-                {studentData?.courses?.map((c) => (
-                  <Card className="space-y-2 py-2" key={c.id}>
-                    <CardContent className="px-3">
-                      <h2>{c.name}</h2>
-                      <p>Code: {c.code}</p>
-                      <p>Credits: {c.credits}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          </div>
 
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setOpen(false)}
-              disabled={assignCourseMutation.isPending}
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleAssignCourse}
-              disabled={assignCourseMutation.isPending}
-            >
-              {assignCourseMutation.isPending
-                ? "Assigning..."
-                : "Assign Course"}
-            </Button>
-          </DialogFooter>
-        </Activity>
+              {/* Currently Enrolled Courses */}
+              {studentData?.courses && studentData.courses.length > 0 && (
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <Label className="text-base font-medium">
+                      Currently Enrolled ({studentData.courses.length})
+                    </Label>
+                  </div>
+                  <div className="grid gap-3 max-h-72 overflow-y-auto">
+                    {studentData.courses.map((course) => (
+                      <Card key={course.id} className="border py-0">
+                        <CardContent className="p-3 py-2">
+                          <h4 className="font-medium">{course.name}</h4>
+                          <div className="text-sm text-muted-foreground space-y-1 mt-1">
+                            <p>Code: {course.code}</p>
+                            <p>Credits: {course.credits}</p>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <DialogFooter>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleClose}
+                  disabled={assignCourseMutation.isPending}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={
+                    assignCourseMutation.isPending ||
+                    !form.formState.isValid ||
+                    form.getValues("courseIds").length === 0
+                  }
+                >
+                  {assignCourseMutation.isPending
+                    ? "Assigning..."
+                    : "Assign Courses"}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        )}
       </DialogContent>
     </Dialog>
   );
