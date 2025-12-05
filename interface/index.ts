@@ -13,7 +13,7 @@ export interface Course {
   id: string;
   name: string;
   code: string;
-  faculty: string; // facultyId
+  faculty: string[]; // facultyId
   enrollment: number;
   credits: number;
 }
@@ -44,4 +44,26 @@ export interface Enrollment {
   studentId: string;
   courseId: string;
   enrolledDate: string;
+}
+
+export interface StudentProfile {
+  id: string;
+  name: string;
+  email: string;
+  gpa: number;
+  enrollmentYear: number;
+  year: Student["year"];
+  enrolledCourses: string[];
+  grades: Array<{
+    courseId: string;
+    grade: string;
+    score: number;
+  }>;
+  courses: Array<{
+    id: string;
+    name: string;
+    code: string;
+    faculty: string;
+    credits: number;
+  }>;
 }

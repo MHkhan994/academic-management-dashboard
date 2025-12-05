@@ -17,29 +17,7 @@ import {
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import PageHeader from "@/components/global/PageHeader";
-import { Student } from "@/interface";
-
-interface StudentProfile {
-  id: string;
-  name: string;
-  email: string;
-  gpa: number;
-  enrollmentYear: number;
-  year: Student["year"];
-  enrolledCourses: string[];
-  grades: Array<{
-    courseId: string;
-    grade: string;
-    score: number;
-  }>;
-  courses: Array<{
-    id: string;
-    name: string;
-    code: string;
-    faculty: string;
-    credits: number;
-  }>;
-}
+import { StudentProfile } from "@/interface";
 
 const fetchStudent = async (studentId: string) => {
   try {

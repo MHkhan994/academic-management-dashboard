@@ -1,5 +1,12 @@
 "use client";
-import { GraduationCap, Home, School, Settings, Users } from "lucide-react";
+import {
+  GraduationCap,
+  Home,
+  School,
+  Settings,
+  UserCog,
+  Users,
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -35,8 +42,13 @@ const items = [
     icon: GraduationCap,
   },
   {
-    title: "Faculty",
-    url: "/faculty",
+    title: "Faculty Members",
+    url: "/faculty-members",
+    icon: UserCog,
+  },
+  {
+    title: "Faculty Panel",
+    url: "/faculty-panel",
     icon: School,
   },
   {

@@ -4,6 +4,8 @@ import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/shared/AppSidebar";
+import QueryProvider from "@/providers/QueryProvider";
+import { Toaster } from "sonner";
 
 const beVietnamPro = Be_Vietnam_Pro({
   subsets: ["latin"],
@@ -38,14 +40,17 @@ export default function RootLayout({
       <body
         className={`${beVietnamPro.variable} antialiased bg-sidebar p-2 ps-0 pb-0`}
       >
-        <ThemeProvider attribute="class" defaultTheme="dark">
-          <SidebarProvider>
-            <AppSidebar />
-            <main className="bg-background border border-black/10 overflow-hidden shadow-sm w-full rounded-xl">
-              {children}
-            </main>
-          </SidebarProvider>
-        </ThemeProvider>
+        <QueryProvider>
+          <ThemeProvider attribute="class" defaultTheme="dark">
+            <SidebarProvider>
+              <AppSidebar />
+              <main className="bg-background border border-black/10 overflow-hidden shadow-sm w-full rounded-xl">
+                {children}
+              </main>
+            </SidebarProvider>
+            <Toaster richColors position="top-center" />
+          </ThemeProvider>
+        </QueryProvider>
       </body>
     </html>
   );
