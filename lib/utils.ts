@@ -1,6 +1,8 @@
 import { Course, GradeResult, Student } from "@/interface";
+import { AxiosError } from "axios";
 import { clsx, type ClassValue } from "clsx";
 import dayjs from "dayjs";
+import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -107,4 +109,12 @@ export const exportCoursesToCsv = (courses: Course[]) => {
   link.download = `courses_${new Date().toISOString().slice(0, 10)}.csv`;
   link.click();
   URL.revokeObjectURL(url);
+};
+
+export const errorHandler = (error: unknown, message: string) => {
+  if (error instanceof AxiosError) {
+    toast.error(error?.response?.data?.message || message);
+  } else {
+    toast.error(message);
+  }
 };

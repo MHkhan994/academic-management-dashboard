@@ -88,7 +88,7 @@ export default function StudentsPage() {
       if (dateFilter) params.append("date", dateFilter);
       if (sortBy) params.append("sortBy", sortBy);
 
-      await delay(500);
+      await delay(200);
 
       const res = await axios.get(`/api/students?${params.toString()}`);
       return res.data;

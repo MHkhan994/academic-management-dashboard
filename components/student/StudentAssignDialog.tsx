@@ -27,7 +27,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { toast } from "sonner";
 import { Course, StudentProfile } from "@/interface";
-import { delay } from "@/lib/utils";
+import { delay, errorHandler } from "@/lib/utils";
 import { Label } from "../ui/label";
 
 const assignSchema = z.object({
@@ -86,7 +86,7 @@ const StudentAssignDialog = ({
 
   const assignCourseMutation = useMutation({
     mutationFn: async (data: { studentId: string; courseIds: string[] }) => {
-      await delay(500);
+      await delay(200);
       return axios.patch(`/api/students/${data.studentId}`, {
         enrolledCourses: data.courseIds,
       });
@@ -98,12 +98,9 @@ const StudentAssignDialog = ({
       form.reset();
       setOpen(false);
     },
-    onError: (error: any) => {
+    onError: (error) => {
       console.error("Failed to assign courses:", error);
-      toast.error(
-        error?.response?.data?.message ||
-          "Failed to assign courses. Please try again."
-      );
+      errorHandler(error, "Failed to assign courses. Please try again.");
     },
   });
 

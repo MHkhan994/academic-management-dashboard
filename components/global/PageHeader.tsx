@@ -13,7 +13,7 @@ const PageHeader = ({ title, subtitle, buttons, className }: TProps) => {
   return (
     <div
       className={cn(
-        "flex items-center border-b flex-wrap gap-x-3 gap-y-3 pb-3 min-w-0",
+        "flex items-center border-b justify-between flex-wrap gap-x-3 gap-y-3 pb-3 w-full",
         className
       )}
     >
