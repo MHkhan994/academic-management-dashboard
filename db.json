@@ -12,7 +12,8 @@
         "CS101",
         "CS201",
         "MATH101",
-        "ENG101"
+        "ENG101",
+        "MATH201"
       ]
     },
     {
@@ -26,7 +27,8 @@
       "enrolledCourses": [
         "CS101",
         "PHYS101",
-        "CS201"
+        "CS201",
+        "MATH201"
       ]
     },
     {
@@ -173,7 +175,7 @@
       "faculty": [
         "F003"
       ],
-      "enrollment": 198,
+      "enrollment": 200,
       "credits": 3
     },
     {

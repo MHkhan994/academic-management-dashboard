@@ -1,4 +1,5 @@
 import CourseManagement from "@/components/faculty/CourseManagement";
+import GradeManagement from "@/components/faculty/GradeManagement";
 import PageHeader from "@/components/global/PageHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import React from "react";
@@ -17,6 +18,9 @@ const FacultyPanel = () => {
         </TabsList>
         <TabsContent value="course">
           <CourseManagement />
+        </TabsContent>
+        <TabsContent value="grade" className="space-y-4">
+          <GradeManagement />
         </TabsContent>
       </Tabs>
     </div>
