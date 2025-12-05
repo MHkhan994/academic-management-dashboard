@@ -110,9 +110,9 @@ const AddGraderDialog = ({
       form.reset();
     },
     onError: (error: any) => {
-      console.error("Failed to add grade:", error);
+      console.error("Failed to add grade:", error?.response);
       toast.error(
-        error?.response?.data?.message ||
+        error?.response?.data?.error?.message ||
           "Failed to add grade. Please try again."
       );
     },
@@ -234,7 +234,7 @@ const AddGraderDialog = ({
                         {...field}
                         value={field.value?.toString()}
                         onChange={(e) => {
-                          field.onChange(e);
+                          field.onChange(Number(e.target.value));
                           const suggested = autoSuggestGrade(e.target.value);
                           if (suggested) {
                             form.setValue("grade", suggested); // Auto-fill letter grade
@@ -273,7 +273,7 @@ const AddGraderDialog = ({
               </Button>
               <Button
                 type="submit"
-                disabled={addGradeMutation.isPending || !form.formState.isValid}
+                disabled={addGradeMutation.isPending}
                 className="min-w-[120px]"
               >
                 {addGradeMutation.isPending ? "Submitting..." : "Submit Grade"}

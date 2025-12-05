@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 import { SidebarTrigger } from "../ui/sidebar";
-import ThemeSwitcher from "../shared/ThemeSwitcher";
 import { cn } from "@/lib/utils";
 
 type TProps = {
@@ -14,7 +13,7 @@ const PageHeader = ({ title, subtitle, buttons, className }: TProps) => {
   return (
     <div
       className={cn(
-        "flex items-center border-b flex-wrap gap-x-3 gap-y-1.5 justify-between pb-4",
+        "flex items-center border-b flex-wrap gap-x-3 gap-y-3 pb-3 min-w-0",
         className
       )}
     >
@@ -25,7 +24,7 @@ const PageHeader = ({ title, subtitle, buttons, className }: TProps) => {
           <p className="page-subtitle">{subtitle}</p>
         </div>
       </div>
-      <div className="flex gap-2">{buttons}</div>
+      {buttons && <div className="flex gap-2 ml-10">{buttons}</div>}
     </div>
   );
 };
