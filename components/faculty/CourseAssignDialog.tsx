@@ -21,9 +21,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { Course, Student } from "@/interface";
-import { delay } from "@/lib/utils";
+import { delay, errorHandler } from "@/lib/utils";
 import { toast } from "sonner";
 import { useEffect } from "react";
 
@@ -92,7 +92,7 @@ const CourseAssignDialog = ({
 
   const assignStudentsMutation = useMutation({
     mutationFn: async (data: AssignFormData) => {
-      await delay(500);
+      await delay(200);
       return axios.post("/api/courses/assign", {
         courseId: data.courseId,
         studentIds: data.studentIds,
@@ -105,12 +105,9 @@ const CourseAssignDialog = ({
       setOpen(false);
       form.reset();
     },
-    onError: (error: any) => {
+    onError: (error) => {
       console.error("Failed to assign:", error);
-      toast.error(
-        error?.response?.data?.message ||
-          "Failed to assign students. Please try again."
-      );
+      errorHandler(error, "Failed to assign students. Please try again.");
     },
   });
 

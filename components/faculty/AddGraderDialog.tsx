@@ -30,7 +30,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Course, Student } from "@/interface";
-import { autoSuggestGrade } from "@/lib/utils";
+import { autoSuggestGrade, errorHandler } from "@/lib/utils";
 import { useEffect } from "react";
 
 const gradeSchema = z.object({
@@ -109,12 +109,9 @@ const AddGraderDialog = ({
       setOpen(false);
       form.reset();
     },
-    onError: (error: any) => {
-      console.error("Failed to add grade:", error?.response);
-      toast.error(
-        error?.response?.data?.error?.message ||
-          "Failed to add grade. Please try again."
-      );
+    onError: (error) => {
+      console.error("Failed to add grade:", error);
+      errorHandler(error, "Failed to add grade. Please try again.");
     },
   });
 

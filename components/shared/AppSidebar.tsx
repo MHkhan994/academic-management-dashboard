@@ -53,7 +53,7 @@ const items = [
   },
   {
     title: "Settings",
-    url: "#",
+    url: "/analytics",
     icon: Settings,
   },
 ];
