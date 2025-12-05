@@ -30,7 +30,7 @@ import GlobalPagination from "@/components/global/GlobalPagination";
 import { useQuery } from "@tanstack/react-query";
 import { Combobox } from "@/components/ui/combobox";
 import StudentAssignDialog from "@/components/student/StudentAssignDialog";
-import { delay } from "@/lib/utils";
+import { delay, exportStudentsToCsv } from "@/lib/utils";
 
 export default function StudentsPage() {
   const [search, setSearch] = useState("");
@@ -113,13 +113,7 @@ export default function StudentsPage() {
   const handleExport = async () => {
     setExporting(true);
     try {
-      const res = await fetch("/api/students");
-      const blob = await res.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "students.csv";
-      a.click();
+      exportStudentsToCsv(students);
     } catch (error) {
       console.error("Failed to export:", error);
     } finally {
