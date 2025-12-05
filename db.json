@@ -8,7 +8,7 @@
       "enrollmentDate": "2022-08-15",
       "year": "Junior",
       "gpa": 3.95,
-      "enrolledCourses": ["CS101", "CS201", "MATH101"]
+      "enrolledCourses": ["CS101", "CS201", "MATH101", "ENG101"]
     },
     {
       "id": "S002",
@@ -28,7 +28,7 @@
       "enrollmentDate": "2023-08-20",
       "year": "Sophomore",
       "gpa": 3.92,
-      "enrolledCourses": ["CS101", "CS201", "ENG101"]
+      "enrolledCourses": ["CS101", "CS201", "ENG101", "MATH101"]
     },
     {
       "id": "S004",
@@ -48,7 +48,7 @@
       "enrollmentDate": "2021-08-10",
       "year": "Senior",
       "gpa": 3.99,
-      "enrolledCourses": ["CS201", "CS301", "MATH201"]
+      "enrolledCourses": ["CS201", "CS301", "MATH201", "PHYS201", "MATH101"]
     },
     {
       "id": "S006",
@@ -68,7 +68,7 @@
       "enrollmentDate": "2022-08-25",
       "year": "Junior",
       "gpa": 3.88,
-      "enrolledCourses": ["PHYS101", "PHYS201", "MATH101"]
+      "enrolledCourses": ["PHYS101", "PHYS201", "MATH101", "MATH201"]
     },
     {
       "id": "S008",
@@ -78,7 +78,7 @@
       "enrollmentDate": "2021-08-18",
       "year": "Senior",
       "gpa": 3.91,
-      "enrolledCourses": ["CS201", "MATH201", "ENG201"]
+      "enrolledCourses": ["CS201", "MATH201", "ENG201", "PHYS201", "HIST101"]
     }
   ],
   "courses": [
@@ -86,7 +86,7 @@
       "id": "CS101",
       "name": "Introduction to Computer Science",
       "code": "CS101",
-      "faculty": "F001",
+      "faculty": ["F001"],
       "enrollment": 245,
       "credits": 3
     },
@@ -94,7 +94,7 @@
       "id": "CS201",
       "name": "Data Structures",
       "code": "CS201",
-      "faculty": "F001",
+      "faculty": ["F001"],
       "enrollment": 156,
       "credits": 3
     },
@@ -102,7 +102,7 @@
       "id": "CS301",
       "name": "Algorithms",
       "code": "CS301",
-      "faculty": "F002",
+      "faculty": ["F002"],
       "enrollment": 89,
       "credits": 4
     },
@@ -110,15 +110,15 @@
       "id": "MATH101",
       "name": "Calculus I",
       "code": "MATH101",
-      "faculty": "F003",
-      "enrollment": 312,
+      "faculty": ["F003"],
+      "enrollment": 314,
       "credits": 4
     },
     {
       "id": "MATH201",
       "name": "Linear Algebra",
       "code": "MATH201",
-      "faculty": "F003",
+      "faculty": ["F003"],
       "enrollment": 198,
       "credits": 3
     },
@@ -126,7 +126,7 @@
       "id": "PHYS101",
       "name": "Physics I",
       "code": "PHYS101",
-      "faculty": "F004",
+      "faculty": ["F004"],
       "enrollment": 287,
       "credits": 4
     },
@@ -134,7 +134,7 @@
       "id": "PHYS201",
       "name": "Physics II",
       "code": "PHYS201",
-      "faculty": "F004",
+      "faculty": ["F004"],
       "enrollment": 124,
       "credits": 4
     },
@@ -142,7 +142,7 @@
       "id": "ENG101",
       "name": "English Composition",
       "code": "ENG101",
-      "faculty": "F005",
+      "faculty": ["F005"],
       "enrollment": 198,
       "credits": 3
     },
@@ -150,7 +150,7 @@
       "id": "ENG201",
       "name": "Literature",
       "code": "ENG201",
-      "faculty": "F005",
+      "faculty": ["F005"],
       "enrollment": 87,
       "credits": 3
     },
@@ -158,7 +158,7 @@
       "id": "HIST101",
       "name": "World History",
       "code": "HIST101",
-      "faculty": "F006",
+      "faculty": ["F006"],
       "enrollment": 156,
       "credits": 3
     }
@@ -212,79 +212,92 @@
       "studentId": "S001",
       "courseId": "CS101",
       "grade": "A+",
-      "score": 98
+      "score": 98,
+      "id": "99fd"
     },
     {
       "studentId": "S001",
       "courseId": "CS201",
       "grade": "A",
-      "score": 94
+      "score": 94,
+      "id": "30c0"
     },
     {
       "studentId": "S001",
       "courseId": "MATH101",
       "grade": "A",
-      "score": 96
+      "score": 96,
+      "id": "b073"
     },
     {
       "studentId": "S002",
       "courseId": "CS101",
       "grade": "A-",
-      "score": 91
+      "score": 91,
+      "id": "cd3e"
     },
     {
       "studentId": "S002",
       "courseId": "PHYS101",
       "grade": "B+",
-      "score": 88
+      "score": 88,
+      "id": "96e8"
     },
     {
       "studentId": "S003",
       "courseId": "CS101",
       "grade": "A",
-      "score": 95
+      "score": 95,
+      "id": "bb01"
     },
     {
       "studentId": "S003",
       "courseId": "CS201",
       "grade": "A",
-      "score": 93
+      "score": 93,
+      "id": "709b"
     },
     {
       "studentId": "S003",
       "courseId": "ENG101",
       "grade": "A+",
-      "score": 99
+      "score": 99,
+      "id": "a1bf"
     },
     {
       "studentId": "S004",
       "courseId": "MATH101",
       "grade": "B+",
-      "score": 87
+      "score": 87,
+      "id": "1b4b"
     },
     {
       "studentId": "S004",
       "courseId": "PHYS101",
       "grade": "B",
-      "score": 85
+      "score": 85,
+      "id": "ea1c"
     },
     {
       "studentId": "S005",
       "courseId": "CS201",
       "grade": "A+",
-      "score": 99
+      "score": 99,
+      "id": "8911"
     },
     {
       "studentId": "S005",
       "courseId": "CS301",
       "grade": "A+",
-      "score": 97
+      "score": 97,
+      "id": "e85a"
     },
     {
       "studentId": "S005",
       "courseId": "MATH201",
       "grade": "A+",
-      "score": 98
+      "score": 98,
+      "id": "75b3"
     }
   ]
 }

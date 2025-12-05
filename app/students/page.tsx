@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -18,7 +18,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import dayjs from "dayjs";
-import { Search, Download, X } from "lucide-react";
+import { Search, Download, X, BookOpen } from "lucide-react";
 import PageHeader from "@/components/global/PageHeader";
 import axios from "axios";
 import useDebounce from "@/hooks/useDebounce";
@@ -27,49 +27,54 @@ import { DataTable } from "@/components/global/DataTable";
 import { Course, Student } from "@/interface";
 import Link from "next/link";
 import GlobalPagination from "@/components/global/GlobalPagination";
+import { useQuery } from "@tanstack/react-query";
+import { Combobox } from "@/components/ui/combobox";
+import StudentAssignDialog from "@/components/student/StudentAssignDialog";
+import { delay } from "@/lib/utils";
 
 export default function StudentsPage() {
-  const [students, setStudents] = useState<Student[]>([]);
   const [search, setSearch] = useState("");
   const [yearFilter, setYearFilter] = useState("all");
-  const [courseFilter, setCourseFilter] = useState("all");
+  const [courseFilter, setCourseFilter] = useState("");
   const [gpaMin, setGpaMin] = useState("");
   const [gpaMax, setGpaMax] = useState("");
   const [dateFilter, setDateFilter] = useState("");
   const [sortBy, setSortBy] = useState("gpa");
-  const [loading, setLoading] = useState(true);
   const [exporting, setExporting] = useState(false);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(5);
-  const [total, setTotal] = useState(0);
-  const [courses, setCourses] = useState<Course[]>([]);
+  const [openAssignDialog, setOpenAssignDialog] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState("");
+
+  const { data: coursesData } = useQuery({
+    queryKey: ["courses"],
+    queryFn: async () => {
+      const res = await axios.get("/api/courses?page=1&limit=30");
+      console.log(res);
+      return res.data?.data || [];
+    },
+  });
+
+  const courses: Course[] = coursesData || [];
 
   const debounceSearch = useDebounce(search, 300);
   const debounceGpaMin = useDebounce(gpaMin, 300);
   const debounceGpaMax = useDebounce(gpaMax, 300);
 
-  useEffect(() => {
-    fetchStudents();
-  }, [page, limit]);
-  useEffect(() => {
-    setPage(1);
-
-    if (page === 1) {
-      fetchStudents();
-    }
-  }, [
-    debounceSearch,
-    yearFilter,
-    courseFilter,
-    debounceGpaMin,
-    debounceGpaMax,
-    dateFilter,
-    sortBy,
-  ]);
-
-  const fetchStudents = async () => {
-    setLoading(true);
-    try {
+  const { data: studentsData, isLoading: loading } = useQuery({
+    queryKey: [
+      "students",
+      page,
+      limit,
+      debounceSearch,
+      yearFilter,
+      courseFilter,
+      debounceGpaMin,
+      debounceGpaMax,
+      dateFilter,
+      sortBy,
+    ],
+    queryFn: async () => {
       const params = new URLSearchParams({
         page: page.toString(),
         limit: limit.toString(),
@@ -83,24 +88,21 @@ export default function StudentsPage() {
       if (dateFilter) params.append("date", dateFilter);
       if (sortBy) params.append("sortBy", sortBy);
 
+      await delay(500);
+
       const res = await axios.get(`/api/students?${params.toString()}`);
-      const data = res.data;
-      setStudents(data?.data || []);
-      setTotal(data?.pagination?.total || 0);
-    } catch (error) {
-      console.error("Failed to fetch students:", error);
-    } finally {
-      // simulating loading time. cause its too fast to see the loading skeleton i have spent time to add 😊😊
-      setTimeout(() => {
-        setLoading(false);
-      }, 500);
-    }
-  };
+      return res.data;
+    },
+    staleTime: 60000,
+  });
+
+  const students = studentsData?.data || [];
+  const total = studentsData?.pagination?.total || 0;
 
   const clearFilters = () => {
     setSearch("");
     setYearFilter("all");
-    setCourseFilter("all");
+    setCourseFilter("");
     setGpaMin("");
     setGpaMax("");
     setDateFilter("");
@@ -158,9 +160,23 @@ export default function StudentsPage() {
       accessorKey: "id",
       header: "Actions",
       cell: ({ row }) => (
-        <Link href={`/students/${row.original.id}`}>
-          <Button variant={"secondary"}>View Details</Button>
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link href={`/students/${row.original.id}`}>
+            <Button variant={"secondary"}>View Details</Button>
+          </Link>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setOpenAssignDialog(true);
+              setSelectedStudent(row.original.id);
+            }}
+            className="gap-1"
+          >
+            <BookOpen className="h-4 w-4" />
+            Assign Course
+          </Button>
+        </div>
       ),
     },
   ];
@@ -168,7 +184,7 @@ export default function StudentsPage() {
   const hasActiveFilters =
     search ||
     yearFilter !== "all" ||
-    courseFilter !== "all" ||
+    courseFilter ||
     gpaMin ||
     gpaMax ||
     dateFilter ||
@@ -243,19 +259,16 @@ export default function StudentsPage() {
               </SelectContent>
             </Select>
 
-            <Select value={courseFilter} onValueChange={setCourseFilter}>
-              <SelectTrigger>
-                <SelectValue placeholder="Filter by course" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Courses</SelectItem>
-                {courses.map((course) => (
-                  <SelectItem key={course.id} value={course.id}>
-                    {course.code} - {course.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Combobox
+              placeholder="Filter by course"
+              value={courseFilter}
+              onChange={setCourseFilter}
+              options={courses?.map((course) => ({
+                value: course.id,
+                searchValue: course.name,
+                label: course.name,
+              }))}
+            />
 
             <Input
               type="number"
@@ -322,6 +335,12 @@ export default function StudentsPage() {
           </div>
         </CardContent>
       </Card>
+
+      <StudentAssignDialog
+        open={openAssignDialog}
+        setOpen={setOpenAssignDialog}
+        selectedStudent={selectedStudent}
+      />
     </main>
   );
 }

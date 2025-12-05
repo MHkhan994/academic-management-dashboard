@@ -58,36 +58,31 @@ export function DataTable<TData, TValue>({
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows?.length ? (
-            loading ? (
-              Array.from({ length: limit }).map((_, i) => (
-                <TableRow key={i}>
-                  {Array.from({
-                    length: columns.length,
-                  }).map((_, index) => (
-                    <TableCell key={index}>
-                      <Skeleton className="w-full h-7 my-1" />
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="py-2">
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            )
+          {loading ? (
+            Array.from({ length: limit }).map((_, i) => (
+              <TableRow key={i}>
+                {Array.from({
+                  length: columns.length,
+                }).map((_, index) => (
+                  <TableCell key={index}>
+                    <Skeleton className="w-full h-7 my-1" />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          ) : table.getRowModel().rows?.length ? (
+            table.getRowModel().rows.map((row) => (
+              <TableRow
+                key={row.id}
+                data-state={row.getIsSelected() && "selected"}
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id} className="py-2">
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
