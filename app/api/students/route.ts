@@ -15,6 +15,7 @@ export async function GET(req: NextRequest) {
     const sortBy = searchParams.get("sortBy");
     const page = parseInt(searchParams.get("page") || "1");
     const limit = parseInt(searchParams.get("limit") || "10");
+    const excludeCourse = searchParams.get("excludeCourse");
 
     const res = await instance.get(`/students`);
 
@@ -42,6 +43,14 @@ export async function GET(req: NextRequest) {
         s.enrolledCourses?.some((c: any) =>
           typeof c === "string" ? c === course : c.id === course
         )
+      );
+    }
+
+    console.log(excludeCourse);
+
+    if (excludeCourse) {
+      students = students.filter(
+        (s) => !s.enrolledCourses.find((c) => c === excludeCourse)
       );
     }
 

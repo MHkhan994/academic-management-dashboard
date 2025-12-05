@@ -16,7 +16,6 @@ import { Course, StudentProfile } from "@/interface";
 import { MultiSelect } from "../ui/multiselect";
 import { Activity, useState } from "react";
 import { Skeleton } from "../ui/skeleton";
-import { Badge } from "../ui/badge";
 import { Card, CardContent } from "../ui/card";
 import { delay } from "@/lib/utils";
 

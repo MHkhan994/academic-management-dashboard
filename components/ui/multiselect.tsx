@@ -71,38 +71,47 @@ export function MultiSelect({
     }
   };
 
+  const triggerDiv = (
+    <div
+      className={cn(
+        "w-full bg-input/30 cursor-pointer min-h-9 items-center flex gap-1 flex-wrap p-1 rounded-md border border-border-color max-h-[150px] overflow-y-auto",
+        className,
+        readOnly && "hover:cursor-not-allowed"
+      )}
+    >
+      {selected.length > 0 ? (
+        selected.map((v, i) => (
+          <div
+            className="bg-background text-sm text-gray w-fit flex gap-1 items-center shadow-sm rounded-sm px-2 py-1"
+            key={i}
+          >
+            {options?.find((op) => op.value === v)?.label}
+            <button
+              type="button"
+              className="cursor-pointer w-fit"
+              onClick={(e) => handleRemove(e, v)}
+            >
+              <XIcon size={14} />
+            </button>
+          </div>
+        ))
+      ) : (
+        <span className="text-gray text-sm px-2">
+          {placeholder || "Select options"}
+        </span>
+      )}
+    </div>
+  );
+
   return (
     <Popover modal={true} open={open} onOpenChange={setOpen}>
-      <PopoverTrigger disabled={readOnly} asChild>
-        <div
-          className={cn(
-            "w-full bg-input/30 cursor-pointer min-h-9 items-center flex gap-1 flex-wrap p-1 rounded-md border border-border-color max-h-[150px] overflow-y-auto",
-            className
-          )}
-        >
-          {selected.length > 0 ? (
-            selected.map((v, i) => (
-              <div
-                className="bg-background text-sm text-gray w-fit flex gap-1 items-center shadow-sm rounded-sm px-2 py-1"
-                key={i}
-              >
-                {options?.find((op) => op.value === v)?.label}
-                <button
-                  type="button"
-                  className="cursor-pointer w-fit"
-                  onClick={(e) => handleRemove(e, v)}
-                >
-                  <XIcon size={14} />
-                </button>
-              </div>
-            ))
-          ) : (
-            <span className="text-gray text-sm px-2">
-              {placeholder || "Select options"}
-            </span>
-          )}
-        </div>
-      </PopoverTrigger>
+      {readOnly ? (
+        triggerDiv
+      ) : (
+        <PopoverTrigger disabled={readOnly} asChild>
+          {triggerDiv}
+        </PopoverTrigger>
+      )}
       <PopoverContent className="w-(--radix-popover-trigger-width) p-0">
         <Command>
           <CommandInput placeholder={searchPlaceholder} className="h-9" />
