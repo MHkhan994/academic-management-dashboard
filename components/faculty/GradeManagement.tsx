@@ -29,7 +29,7 @@ const GradeManagement = () => {
         page: page.toString(),
         limit: limit.toString(),
       });
-      await delay(200);
+      // await delay(200);
       const res = await axios.get(`/api/grades?${params.toString()}`);
       return res.data || [];
     },
