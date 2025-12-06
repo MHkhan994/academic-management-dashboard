@@ -173,7 +173,7 @@ export default function AnalyticsPage() {
         {/* Enrollment Trends */}
         <TabsContent value="enrollments">
           <Card>
-            <CardHeader className="flex justify-between items-center flex-row">
+            <CardHeader className="flex flex-wrap gap-2 justify-between items-center flex-row">
               <div>
                 <CardTitle className="flex items-center gap-2">
                   <Calendar className="h-5 w-5" />
@@ -206,7 +206,7 @@ export default function AnalyticsPage() {
         <TabsContent value="performance" className="space-y-6">
           <Card>
             <CardHeader>
-              <div className="flex items-center justify-between">
+              <div className="flex flex-wrap gap-2 items-center justify-between">
                 <div>
                   <CardTitle className="flex items-center gap-2">
                     <Award className="h-5 w-5" />
