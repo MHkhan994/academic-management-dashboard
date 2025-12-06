@@ -52,7 +52,7 @@ const items = [
     icon: School,
   },
   {
-    title: "Settings",
+    title: "Analytics",
     url: "/analytics",
     icon: Settings,
   },

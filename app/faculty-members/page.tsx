@@ -18,52 +18,37 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/global/DataTable";
 import { Faculty } from "@/interface";
 import GlobalPagination from "@/components/global/GlobalPagination";
+import { exportFacultyToCsv } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
 
 export default function FacultyPage() {
-  const [faculties, setFaculties] = useState<Faculty[]>([]);
   const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(true);
   const [exporting, setExporting] = useState(false);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(5);
-  const [total, setTotal] = useState(0);
 
   const debounceSearch = useDebounce(search, 300);
 
-  useEffect(() => {
-    fetchFaculties();
-  }, [page, limit]);
-
-  useEffect(() => {
-    setPage(1);
-
-    if (page === 1) {
-      fetchFaculties();
-    }
-  }, [debounceSearch]);
-
-  const fetchFaculties = async () => {
-    setLoading(true);
-    try {
+  const { data: response, isLoading: loading } = useQuery({
+    queryKey: ["faculties", page, limit, debounceSearch],
+    queryFn: async () => {
       const params = new URLSearchParams({
         page: page.toString(),
         limit: limit.toString(),
       });
-
-      if (debounceSearch) params.append("search", debounceSearch);
+      if (debounceSearch) {
+        params.append("search", debounceSearch);
+        params.set("page", "1");
+      }
 
       const res = await axios.get(`/api/faculty?${params.toString()}`);
-      const data = res.data;
-      setFaculties(data?.data || []);
-      setTotal(data?.pagination?.total || 0);
-    } catch (error) {
-      console.error("Failed to fetch faculties:", error);
-    } finally {
-      setTimeout(() => {
-        setLoading(false);
-      }, 500);
-    }
-  };
+      return res.data;
+    },
+    staleTime: 1000 * 60, // 30 seconds
+  });
+
+  const faculties: Faculty[] = response?.data || [];
+  const total = response?.pagination?.total || 0;
 
   const clearFilters = () => {
     setSearch("");
@@ -73,13 +58,7 @@ export default function FacultyPage() {
   const handleExport = async () => {
     setExporting(true);
     try {
-      const res = await fetch("/api/faculty");
-      const blob = await res.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "faculties.csv";
-      a.click();
+      exportFacultyToCsv(faculties);
     } catch (error) {
       console.error("Failed to export:", error);
     } finally {

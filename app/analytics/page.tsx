@@ -25,119 +25,107 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Download, TrendingUp, Users, Award, Calendar } from "lucide-react";
+import { Download, TrendingUp, Award, Calendar } from "lucide-react";
 import PageHeader from "@/components/global/PageHeader";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import dynamic from "next/dynamic";
+import { useTheme } from "next-themes";
+import { YearPicker } from "@/components/ui/year-picker";
+import { Label } from "@/components/ui/label";
+import { Course, EnrollmentTrend, TopStudent } from "@/interface";
+import { exportEnrollmentTrends, exportTopStudents } from "@/lib/utils";
 
-// Types
-interface EnrollmentTrend {
-  month: string;
-  enrollments: number;
-}
-
-interface TopStudent {
-  id: string;
-  name: string;
-  email: string;
-  courseName: string;
-  courseCode: string;
-  grade: string;
-  score: number;
-  rank: number;
-}
+const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 export default function AnalyticsPage() {
-  const [selectedCourse, setSelectedCourse] = useState<string>("all");
+  const [selectedCourse, setSelectedCourse] = useState<string>("");
+  const [selectedYear, setselectedYear] = useState(2023);
+  const { theme } = useTheme();
 
-  // Fetch enrollment trends
   const { data: trends } = useQuery<EnrollmentTrend[]>({
-    queryKey: ["analytics", "enrollments"],
-    queryFn: () =>
-      axios.get("/api/analytics/enrollments").then((r) => r.data.data),
-  });
-
-  // Fetch top students
-  const { data: topStudents = [] } = useQuery<TopStudent[]>({
-    queryKey: ["analytics", "top-students", selectedCourse],
+    queryKey: ["analytics", "enrollments", selectedYear],
     queryFn: () =>
       axios
-        .get(`/api/analytics/top-students?course=${selectedCourse}`)
+        .get(`/api/analytics/enrollments?year=${selectedYear}`)
         .then((r) => r.data.data),
   });
 
-  // Fetch all courses for filter
-  const { data: courses = [] } = useQuery<any[]>({
+  const chartOptions: ApexCharts.ApexOptions = {
+    chart: {
+      type: "area",
+      height: 380,
+      toolbar: { show: true },
+      background: "transparent",
+    },
+    dataLabels: { enabled: false },
+    stroke: { curve: "smooth", width: 3 },
+    fill: {
+      type: "gradient",
+      gradient: {
+        shadeIntensity: 1,
+        opacityFrom: 0.7,
+        opacityTo: 0.3,
+        stops: [0, 90, 100],
+      },
+    },
+    colors: ["#3b82f6"],
+    xaxis: {
+      categories: trends?.map((t) => t.month),
+      title: { text: "Month" },
+    },
+    yaxis: {
+      title: { text: "New Enrollments" },
+      min: 0,
+    },
+    tooltip: {
+      x: { format: "MMM yyyy" },
+      y: { formatter: (val) => `${val} students` },
+    },
+    title: {
+      text: `Student Enrollment Trend - ${selectedYear}`,
+      align: "center",
+      style: { fontSize: "18px", fontWeight: "bold" },
+    },
+    grid: { borderColor: "#e2e8f0", strokeDashArray: 4 },
+    theme: {
+      mode: (theme as "dark" | "light") || "dark",
+      palette: "palette4",
+      monochrome: {
+        enabled: false,
+        color: "var(--chart-3)",
+        shadeTo: (theme as "dark" | "light") || "dark",
+        shadeIntensity: 0.65,
+      },
+    },
+  };
+
+  const chartSeries = [
+    {
+      name: "Enrollments",
+      data: trends?.map((t) => t.enrollments),
+    },
+  ];
+
+  const { data: topStudents = [] } = useQuery<TopStudent[]>({
+    queryKey: ["analytics", "top-students", selectedCourse],
+    queryFn: async () => {
+      const res = await axios.get(
+        `/api/analytics/top-students?course=${selectedCourse}`
+      );
+      console.log(res);
+      return res.data?.data;
+    },
+    enabled: !!selectedCourse,
+  });
+
+  const { data: courses = [] } = useQuery<Course[]>({
     queryKey: ["courses"],
     queryFn: () => axios.get("/api/courses?limit=100").then((r) => r.data.data),
   });
 
-  // CSV Export: Enrollment Trends
-  const exportEnrollmentTrends = () => {
-    if (!trends || trends.length === 0) return;
-    const csv = [
-      ["Month", "Total Enrollments"],
-      ...trends.map((t) => [t.month, t.enrollments]),
-    ]
-      .map((row) => row.join(","))
-      .join("\r\n");
-
-    downloadCSV(
-      csv,
-      `enrollment-trends-${new Date().toISOString().slice(0, 10)}.csv`
-    );
-  };
-
-  // CSV Export: Top Students
-  const exportTopStudents = () => {
-    if (topStudents.length === 0) return;
-    const csv = [
-      ["Rank", "Name", "Email", "Course", "Code", "Grade", "Score"],
-      ...topStudents.map((s) => [
-        s.rank,
-        `"${s.name.replace(/"/g, '""')}"`,
-        s.email,
-        `"${s.courseName.replace(/"/g, '""')}"`,
-        s.courseCode,
-        s.grade,
-        s.score,
-      ]),
-    ]
-      .map((row) => row.join(","))
-      .join("\r\n");
-
-    downloadCSV(
-      csv,
-      `top-students-${
-        selectedCourse === "all"
-          ? "institute"
-          : courses.find((c) => c.id === selectedCourse)?.code || ""
-      }-${new Date().toISOString().slice(0, 10)}.csv`
-    );
-  };
-
-  const downloadCSV = (content: string, filename: string) => {
-    const blob = new Blob([content], { type: "text/csv" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
   return (
-    <main className="p-6 space-y-6">
+    <main className="p-4 space-y-3">
       <PageHeader
         title="Analytics & Reporting"
         subtitle="Track enrollment trends and student performance across the institute"
@@ -146,20 +134,31 @@ export default function AnalyticsPage() {
             <Button
               variant="outline"
               size="sm"
-              onClick={exportEnrollmentTrends}
+              onClick={() => exportEnrollmentTrends(trends)}
             >
               <Download className="h-4 w-4 mr-2" />
               Export Trends
             </Button>
-            <Button variant="outline" size="sm" onClick={exportTopStudents}>
-              <Download className="h-4 w-4 mr-2" />
-              Export Top Students
-            </Button>
+            {selectedCourse && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  exportTopStudents(
+                    topStudents,
+                    courses.find((c) => c.id === selectedCourse)?.code || ""
+                  )
+                }
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Export Top Students
+              </Button>
+            )}
           </div>
         }
       />
 
-      <Tabs defaultValue="enrollments" className="space-y-6">
+      <Tabs defaultValue="enrollments">
         <TabsList className="grid w-full max-w-md grid-cols-2">
           <TabsTrigger value="enrollments" className="gap-2">
             <TrendingUp className="h-4 w-4" />
@@ -174,34 +173,30 @@ export default function AnalyticsPage() {
         {/* Enrollment Trends */}
         <TabsContent value="enrollments">
           <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Calendar className="h-5 w-5" />
-                Course Enrollment Over Time
-              </CardTitle>
-              <CardDescription>
-                Monthly enrollment count across all courses
-              </CardDescription>
+            <CardHeader className="flex justify-between items-center flex-row">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <Calendar className="h-5 w-5" />
+                  Course Enrollment Over Time
+                </CardTitle>
+                <CardDescription>
+                  Monthly enrollment count across all courses
+                </CardDescription>
+              </div>
+              <div className="space-y-2">
+                <Label>Select Year</Label>
+                <YearPicker value={selectedYear} onChange={setselectedYear} />
+              </div>
             </CardHeader>
             <CardContent>
               <div className="h-96 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={trends || []}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="month" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Line
-                      type="monotone"
-                      dataKey="enrollments"
-                      stroke="hsl(var(--primary))"
-                      strokeWidth={3}
-                      dot={{ fill: "hsl(var(--primary))" }}
-                      name="Enrollments"
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
+                <Chart
+                  options={chartOptions}
+                  series={chartSeries as any}
+                  type="area"
+                  height="100%"
+                  width="100%"
+                />
               </div>
             </CardContent>
           </Card>

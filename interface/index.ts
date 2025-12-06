@@ -73,3 +73,19 @@ export type GradeResult = {
   gpa: number;
   isPassing: boolean;
 };
+
+export interface EnrollmentTrend {
+  month: string;
+  enrollments: number;
+}
+
+export interface TopStudent {
+  id: string;
+  name: string;
+  email: string;
+  courseName: string;
+  courseCode: string;
+  grade: string;
+  score: number;
+  rank: number;
+}

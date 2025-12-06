@@ -86,7 +86,7 @@ const StudentAssignDialog = ({
 
   const assignCourseMutation = useMutation({
     mutationFn: async (data: { studentId: string; courseIds: string[] }) => {
-      await delay(200);
+      // await delay(200);
       return axios.patch(`/api/students/${data.studentId}`, {
         enrolledCourses: data.courseIds,
       });

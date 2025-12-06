@@ -92,7 +92,7 @@ const CourseAssignDialog = ({
 
   const assignStudentsMutation = useMutation({
     mutationFn: async (data: AssignFormData) => {
-      await delay(200);
+      // await delay(200);
       return axios.post("/api/courses/assign", {
         courseId: data.courseId,
         studentIds: data.studentIds,
