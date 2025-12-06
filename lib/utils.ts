@@ -109,7 +109,7 @@ export const exportCoursesToCsv = (courses: Course[]) => {
     `"${c.name.replace(/"/g, '""')}"`, // escape quotes
     c.credits,
     c.enrollment,
-    c.faculty.join(","),
+    c.faculty?.join(","),
   ]);
 
   const csvContent = [headers, ...rows]
