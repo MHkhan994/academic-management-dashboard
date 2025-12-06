@@ -203,7 +203,7 @@ export default function StudentsPage() {
       />
 
       <Card className="mb-4">
-        <CardHeader className="gap-0">
+        <CardHeader>
           <div className="flex items-center justify-between">
             <div>
               <CardTitle>Search & Filter</CardTitle>

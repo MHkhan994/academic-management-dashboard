@@ -38,7 +38,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${beVietnamPro.variable} antialiased bg-sidebar p-2 ps-0 pb-0`}
+        className={`${beVietnamPro.variable} antialiased bg-sidebar p-2 md:ps-0 pb-0`}
       >
         <QueryProvider>
           <ThemeProvider attribute="class" defaultTheme="dark">
