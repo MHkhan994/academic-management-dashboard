@@ -135,7 +135,7 @@ export default function CoursesPage() {
         subtitle="View and manage all courses in the system"
         buttons={
           <Button onClick={handleExport} variant="outline" size="sm">
-            <Download className="h-4 w-4 mr-2" />
+            <Download className="h-4 w-4" />
             {isExporting ? "Exporting..." : "Export CSV"}
           </Button>
         }
@@ -156,7 +156,7 @@ export default function CoursesPage() {
             </div>
             {hasActiveFilters && (
               <Button onClick={clearFilters} variant="ghost" size="sm">
-                <X className="h-4 w-4 mr-1" />
+                <X className="h-4 w-4" />
                 Clear
               </Button>
             )}

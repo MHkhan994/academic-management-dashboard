@@ -136,7 +136,7 @@ export default function AnalyticsPage() {
               size="sm"
               onClick={() => exportEnrollmentTrends(trends)}
             >
-              <Download className="h-4 w-4 mr-2" />
+              <Download className="h-4 w-4" />
               Export Trends
             </Button>
             {selectedCourse && (
@@ -150,7 +150,7 @@ export default function AnalyticsPage() {
                   )
                 }
               >
-                <Download className="h-4 w-4 mr-2" />
+                <Download className="h-4 w-4" />
                 Export Top Students
               </Button>
             )}

@@ -196,7 +196,7 @@ export default function StudentsPage() {
             size="sm"
             disabled={exporting}
           >
-            <Download className="h-4 w-4 mr-2" />
+            <Download className="h-4 w-4" />
             {exporting ? "Exporting..." : "Export CSV"}
           </Button>
         }
